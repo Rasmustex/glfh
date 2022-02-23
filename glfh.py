@@ -1,3 +1,4 @@
+from operator import pos
 from random import randint
 import keyboard 
 import re
@@ -37,7 +38,11 @@ def run(test: bool):
             sleep(0.5)
             keyboard.press_and_release('esc')
         else:
+            stringcount = 0
             for s in charlist:
+                sleep(1)
+                keyboard.write('say ' + str(stringcount) + '============================================\n')
+                sleep(1)
                 counter = 0
                 completed_string = False 
                 while not completed_string:
@@ -52,7 +57,45 @@ def run(test: bool):
                         counter += 1
                     keyboard.write(''.join(printstr) + '\n')
                     sleep(1)
+                stringcount += 1
             keyboard.press_and_release('esc')
+            inputstr = input('remove> ')
+            chlist = []
+            for s in charlist: 
+                chlist.append(list(s))
+
+            while inputstr != 'done':
+                position = []
+                inputstr = inputstr.split(' ')
+                if len(inputstr) != 2:
+                    print('Error: input should be in the format of: "x y", where x is the list number, and y the element number')
+                    inputstr = input('remove> ')
+                    continue
+                for s in inputstr:
+                    position.append(int(s))
+                if position[0] > len(charlist) - 1:
+                    print('Error: x selection is out of bounds')
+                    inputstr = input('remove> ')
+                    continue
+                elif position[1] > len(charlist[position[0]]):
+                    print('Error: y selection is out of bounds')
+                    inputstr = input('remove> ')
+                    continue
+                else:
+                    chlist[position[0]][position[1]] = ''
+                inputstr = input('remove> ')
+            output = open('test.txt', 'wb')
+            for l in chlist:
+                output.write('['.encode('utf-8'))
+                output.write(''.join(l).encode('utf-8'))
+                output.write(']\n'.encode('utf-8'))
+            output.close()
+
+
+
+            break
+
+
 
 
 if __name__ == '__main__':
